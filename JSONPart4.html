@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JSON Song List</title>
+<link rel="stylesheet" href= "JSONstyles.css" type="text/css">
+	<script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+	<script>
+			/*Create a form that allows the user to pick a genre.  The form should have a drop down box (<select>) listing the possible genres plus a button labeled "Filter".  You must provide a choice of only the genres that are in the set list.  When the user clicks the button, display only song titles from the selected genre in a user friendly format.Note:  All items MUST be displayed on the page - not in an "alert"*/
+		$(document).ready(function(){
+			$("#submit").on('click', function(){
+				selectgenre = $("#genre option:selected").text(); //selected genre
+				$.get("https://sanjanapuri.github.io/songlistjson/songlist.json", 	function(data){
+					var choicesongs = []; //array of songs with genre
+					songlist = JSON.stringify(data); 
+					data.forEach(function(song){
+						arrlength = song.genre.length; //get length of genre arr
+						for(i = 0; i < arrlength; i++){
+							if(selectgenre == song.genre[i]){
+								choicesongs.push(song.title); 
+							}
+						}
+
+					})
+					choicestr = ""; 
+					for(i = 0; i < choicesongs.length; i++){
+						choicestr += choicesongs[i] + ", "; 
+					}
+					newlength = choicestr.length - 2; 
+					newstr = ""; 
+					for(i = 0; i < newlength; i++){
+						newstr += choicestr[i]; 
+					}
+
+					document.getElementById("songtitle").innerHTML = "Filtered Songs:";  
+					document.getElementById("genretitle").innerHTML = "("+ selectgenre + ")"; 
+					document.getElementById("songlist").innerHTML = newstr;  
+					//display array
+					/*for(i = 0; i < choicesongs.length; i++){
+						alert(choicesongs[i]); 
+					}*/
+
+				})
+				//declare song array
+
+
+			})
+		})
+		
+	</script>
+	<style>
+		
+	</style>
+</head>	
+<body>
+	<h1>Pick a Genre!</h1>
+	<form>
+		<div class="form" align="center">
+			<label for="genre" style="padding-left: 10px">Genre Options: &nbsp;</label>
+			<select id="genre">
+				<option>Alternative</option>
+				<option>Classic Rock</option>
+				<option>Country Rock</option>
+				<option>EDM</option>
+				<option>Folk</option>
+				<option>Indie Folk</option>
+				<option>Pop</option>
+				<option>R&B</option>
+			</select>
+			<input type = "button" value = "Filter" id="submit"/> 
+		</div>
+	</form>
+	<div class="result">
+		<h2 id="songtitle" align="center"></h2>
+		<h3 id="genretitle" align="center"></h3>
+		<h3 id="songlist" align ="center"></h3>
+	</div>
+</body>
+</html>
